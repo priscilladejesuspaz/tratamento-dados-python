@@ -1,0 +1,22 @@
+# ==========================================================
+# MODULO 18 - Python e Coleta de Dados
+# EBAC - Escola Britânica de Artes Criativas e Tecnologia
+#
+# Arquivo de dependências do projeto
+# Este arquivo lista todas as bibliotecas externas necessárias
+# para executar os scripts do módulo.
+#
+# Para instalar:
+# pip install -r requirements.txt
+# ==========================================================
+
+# Biblioteca para realizar requisições HTTP/HTTPS
+# Utilizada para acessar APIs públicas (Banco Central do Brasil)
+# e para download de arquivos via HTTP/FTP (IBGE)
+requests
+
+# Biblioteca para análise e manipulação de dados tabulares
+# Utilizada para transformar dados JSON em DataFrames
+# e exportar os resultados para arquivos CSV
+pandas
+

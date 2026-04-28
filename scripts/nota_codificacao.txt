@@ -1,0 +1,85 @@
+import pandas as pd
+
+pd.set_option('display.width', None)
+pd.set_option('display.max_columns', None)
+pd.set_option('display.max_colwidth', None)
+
+df = pd.read_csv(
+    'C:/Users/Book/Documents/Projetos/taxa_feminicio/10.5.csv',
+    sep=';',
+    encoding='utf-8-sig'  # ✅ Lê corretamente
+)
+
+print(df.head().to_string())
+print('QTD:', df.shape)
+print(df.dtypes)
+
+# Valores nulos
+print("\n=== Valores nulos ===")
+print(df.isnull().sum())
+
+# Limpeza
+df = df.dropna(subset=['Estado', 'Ano', 'Valor'])
+df = df.drop(columns=['Tipo Valor', 'Indicador', 'Categoria', 'Localidade'], errors='ignore')
+
+df.columns = df.columns.str.lower()
+
+# Converte valor
+df['valor'] = df['valor'].str.replace(',', '.').astype(float)
+
+print(df.head().to_string())
+print(df.describe().to_string())
+print(df.dtypes)
+
+# Salva corretamente
+df.to_csv(
+    'taxa_ameaca_vit_mulheres_tratada.csv',
+    index=False,
+    sep=';',
+    encoding='utf-8-sig'  # ✅ Salva corretamente
+)
+
+print("\nColunas finais:", df.columns.tolist())
+print("Arquivo salvo com sucesso! ✅")
+
+import mysql.connector
+
+conn = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="12345",
+    database="taxa_feminicidio"
+)
+
+cursor = conn.cursor()
+
+# Cria a tabela
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS taxa_feminicidio (
+    granularidade_geografica VARCHAR(100),
+    filtro VARCHAR(100),
+    estado VARCHAR(100),
+    uf VARCHAR(2),
+    ano INT,
+    valor DECIMAL(10,2)
+)
+""")
+
+# Insere os dados
+for _, row in df.iterrows():
+    cursor.execute("""
+        INSERT INTO taxa_feminicidio (granularidade_geografica, filtro, estado, uf, ano, valor)
+        VALUES (%s, %s, %s, %s, %s, %s)
+    """, (
+        row['granularidade geográfica'],
+        row['filtro'],
+        row['estado'],
+        row['uf'],
+        int(row['ano']),
+        float(row['valor'])
+    ))
+
+conn.commit()
+cursor.close()
+conn.close()
+print("Dados inseridos com sucesso! ✅")
