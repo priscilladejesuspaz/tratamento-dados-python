@@ -1,4 +1,4 @@
-# Tratamento e Limpeza de Dados — Python
+# Tratamento e Limpeza de Dados - Python
 
 ## Sobre o projeto
 
